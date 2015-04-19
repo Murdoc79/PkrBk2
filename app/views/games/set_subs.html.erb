@@ -1,0 +1,30 @@
+<% content_for :navigation do %>
+  <%= link_to "Back", season_games_path(@season) %>
+<% end %>
+
+<h2>Game #<%= @game.number %></h2>
+
+<% @tables.each do |table| %>
+  <h4>Table #<%= table.number %></h4>
+  <table class="admin">
+    <tr>
+      <td width=100>Player</td>
+      <td width=100>Sub</td>
+      <td>Update Sub</td>
+    </tr>
+    <% table.seats.order("id").each do |seat| %>
+      <tr>
+        <td><%= seat.player.name %></td>
+        <td><%= seat.sub_name %></td>
+        <td>
+          <%= form_tag update_subs_season_game_path(@season, @game) do %>
+            <%= select_tag(:player_id, 
+              options_for_select(@subs_list)) %>
+            <%= hidden_field_tag(:seat_id, seat.id) %>
+            <%= submit_tag("Update") %>
+          <% end %>
+        </td>
+      <tr>
+    <% end %>
+  </table>
+<% end %>

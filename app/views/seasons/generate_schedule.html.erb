@@ -1,0 +1,25 @@
+<h3>Generate Schedule</h3>
+<p>
+This will lock the players, number of games, and number of tables and generate the schedule
+for the season. Ensure that the following is correct before hitting the "Generate" button.
+</p>
+
+<h4>Number of games:</h4>
+<p><%= @season.number_of_games %>
+
+<h4>Number of tables:</h4>
+<p><%= @season.number_of_tables %>
+
+<h4>Number of players:</h4>
+<p><%= @players.size %></p>
+
+<h4>Player list</h4>
+<ul>
+  <% @players.each do |player| %>
+    <li><%= player.name %></li>
+  <% end %>
+</ul>
+
+<%= form_tag run_generate_schedule_season_path(@season) do %>
+  <%= submit_tag("Generate") %>  
+<% end %>

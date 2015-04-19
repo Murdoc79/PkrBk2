@@ -1,0 +1,103 @@
+<% content_for :navigation do %>
+  <%= link_to "Back", season_games_path(@season) %>
+<% end %>
+
+
+<% @tables.each do |table| %>
+  <h4>Table #<%= table.number %></h4>
+  <table class="admin">
+    <tr>
+      <td>Players still playing:</td>
+      <td>Finished:</td>
+      <td>Select Next Place:</td>
+    </tr>
+    <tr>
+      <td>
+        <ul>
+          <% table.players_still_playing.each do |player| %>
+            <li><%= player.name %></li>
+          <% end %>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <% table.players_finished.each do |player| %>
+            <li><%= player.seats.where(:table_id => table.id).first.place.ordinalize %> - <%= player.name %>
+          <% end %>
+        </ul>
+      </td>
+      <td>
+        <% if table.players_still_playing.size != 0 %>
+          Select <%= (table.players.size - table.players_finished.size).ordinalize %> place.<br>       
+          <%= form_tag update_place_season_game_path(@season, @game) do %>
+            <%= select_tag(:player_id, 
+              options_for_select(table.players_still_playing.map { |player| [player.name, player.id] } )) %>
+            <%= hidden_field_tag(:table_id, table.id) %>
+            <%= submit_tag("Submit") %>
+          <% end %><br>
+        <% end %>
+        <% if table.players_finished.size != 0 %>
+          <%= form_tag update_place_season_game_path(@season, @game) do %>
+            <%= hidden_field_tag(:table_id, table.id) %>
+            <%= hidden_field_tag(:undo, 1) %>
+            <%= submit_tag("Undo") %>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+<% end %> 
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th></th>   
+      <% @games_to_display.each_with_index do |game, index| %>
+        <% if index == 0 %>
+          <th id="left-border">
+        <% else %>        
+          <th class="game">
+        <% end %>
+        <%= link_to "Game #{game.number}", season_game_path(@season, game) %></th>
+      <% end %>
+      <th id="right-border">Total Points</th>  
+    </tr>
+  </thead>
+  <% @last_points = 1000 %>
+  <% @last_place %>
+  <% @players.each_with_index do |player, index| %>
+    <tr class="<%= cycle("even", "odd") %>">
+      <% if index == 0 %>      
+        <td id="top-left">
+      <% elsif index == 15 %>
+        <td id="bottom-left">
+      <% else %>
+        <td>
+      <% end %>
+        <!-- TODO This is garbage, but was interesting problem to hack this way (tired) -->
+        <% if player.total_points(@season)[0] < @last_points %>
+          <% @last_place = index + 1 %>
+          <% @last_points = player.total_points(@season)[0] %>
+          <%= (index + 1).ordinalize %>
+        <% else %>
+          <%= @last_place.ordinalize %>
+        <% end %>
+      </td>
+      <td><%= link_to player.name, season_player_path(@season, player.id) %></td>
+      <% @games_to_display.each do |game| %>
+        <td><%= player.points_in_game(game) %></td>
+      <% end %>
+      <% if index == 15 %>
+        <td id="bottom-right">
+      <% else %>
+        <td>
+      <% end %>
+        <%= player.total_points(@season)[0] %>
+        <% if player.total_points(@season)[1] != 0 %>
+          (<%= player.total_points(@season)[0] + player.total_points(@season)[1] %>)
+        <% end %>
+      </td>
+    <tr>       
+  <% end %>
+</table>

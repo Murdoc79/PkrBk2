@@ -1,0 +1,41 @@
+<% content_for :navigation do %>
+  <%= link_to "Back", season_games_path(@season) %>
+<% end %> 
+
+<h4> Season: <%= @season.name %></h4>
+<h4>Game: Game #<%= @game.number %></h4>
+
+<%= form_tag update_seating_season_game_path(@season, @game) do %>
+  <table class="admin">
+    <tr>
+      <td>
+        Player
+      </td>
+      <% @tables.each do |table| %>
+        <td>
+          Table #<%= table.number %>
+        </td>
+      <% end %>
+    </tr>
+    <% @players.each do |player| %>
+      <tr>
+        <td>
+          <%= player.name %>
+        </td>
+        <% @tables.each do |table| %>
+          <td>
+            <% if player.is_at_table?(table) %>
+              <%= radio_button_tag(player.id, table.id, :checked => true) %>
+            <% else %>
+              <%= radio_button_tag(player.id, table.id) %>
+            <% end %>
+          </td>
+        <% end %>
+      </tr>        
+    <% end %>
+  </table>
+  <%= submit_tag("Seat Players") %>  
+<% end %>
+
+
+

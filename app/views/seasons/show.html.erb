@@ -1,0 +1,38 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <% if @season.locked %>
+    Season is locked
+  <% else %>
+    <%= link_to "Generate Season", generate_schedule_season_path(@season) %>
+  <% end %>
+</p>
+
+<% if @season.locked %>
+  <p><%= link_to "Show Games", season_games_path(@season) %></p>
+<% else %>
+  <p><%= link_to 'Delete Season', @season, confirm: 'Are you sure?', method: :delete %></p> 
+<% end %>
+
+<p>
+  <b>Details:</b> <%= link_to "Edit Details", edit_season_path(@season) %> <br>
+  Name: <%= @season.name %><br>
+  Number Of Games: <%= @season.number_of_games %><br>
+  Number Of Tables: <%= @season.number_of_tables %><br>
+  Notes: <%= @season.notes %><br>
+</p>
+
+<p>
+  <b>Players:</b> (<%= @players.size %>)
+  <% if !@season.locked %>    
+    <%= link_to "Edit Players", edit_players_season_path(@season) %>
+  <% end %>
+  <ul>
+    <% @players.each do |player|%>
+      <li><%= player.name %></li>
+    <% end %>
+  </ul>
+</p>
+
+
+

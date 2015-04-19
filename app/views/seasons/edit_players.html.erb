@@ -1,0 +1,70 @@
+Season name: <%= @season.name %>
+<br>
+<br>
+Add Players to this season:<br>
+<br>
+<%= form_tag update_players_season_path(@season) do %>
+  <table>
+    <tr>
+      <td>
+        Name
+      </td>
+      <td>
+        In This Season
+      </td>
+      <td>
+        Sub
+      </td>
+    </tr>
+    <% @players.each do |player| %>
+      <tr>
+        <td>
+          <%= player.name %>
+        </td>
+        <td>
+          <%= 
+            if player.is_in_season?(@season)            
+              radio_button_tag(player.id, "1", :checked => true)
+            else
+              radio_button_tag(player.id, "1") 
+            end
+          %>
+        </td>
+        <td>
+          <%= 
+            if player.is_in_season?(@season)            
+              radio_button_tag(player.id, "0")
+            else
+              radio_button_tag(player.id, "0", :checked => true) 
+            end
+          %>
+        </td>
+      </tr>        
+    <% end %>
+  </table>
+  <%= submit_tag("Update Players") %>  
+<% end %>
+
+<br>
+<br>
+List of players:<br>
+<br>
+<ul>
+  <% @players_in_this_season.each do |player| %>
+    <li>
+      <%= player.name %>
+    </li>
+  <% end %>
+</ul>
+<br>
+<br>
+List of all Players:<br>
+<br>
+<ul>
+  <% @players.each do |player| %>
+    <li>
+      <%= player.name %>
+    </li>
+  <% end %>
+</ul>
+

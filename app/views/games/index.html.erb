@@ -1,0 +1,47 @@
+<% content_for :navigation do %>
+  <%= link_to "Back", season_path(@season) %>
+<% end %>
+
+<h4>Games:</h4>
+<table class="admin">
+  <tr>
+    <td>Game</td>
+    <td>Date</td>
+    <td>Seat Players</td>
+    <td>Select Place</td>
+    <td>Set Subs</td>
+    <td>Change Date</td>
+  </tr>
+  <% @games.each do |game| %>
+    <tr>
+      <td><%= game.number %></td>
+      <td>
+        <% if !game.date.nil? %>
+          <%= game.date.strftime("%B %e, %Y") %></td>
+        <% end %>
+      <td>
+        <% if game.can_seat_players? %>
+          <%= link_to "Seat Players", seat_players_season_game_path(@season, game) %>
+        <% end %>
+      </td>
+      <td>
+        <% if game.in_progress? || game.finished? %>
+          <%= link_to "Select Place", select_place_season_game_path(@season, game) %>
+        <% end %>
+      </td>
+      <td>
+        <% if game.in_progress? || game.finished? %>
+          <%= link_to "Set subs", set_subs_season_game_path(@season, game) %>
+        <% end %>
+      </td>
+      <td>
+        <%= form_tag(season_game_path(@season, game), :method => "put") do %>
+          <%= date_select :game, :date, :default => game.date, 
+                                        :order => [:month, :day, :year] %>
+                                        
+          <%= submit_tag "Update" %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>

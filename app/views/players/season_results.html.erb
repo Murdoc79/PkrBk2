@@ -1,0 +1,39 @@
+<% content_for :navigation do %>
+  <%= link_to "Back", season_path(@season) %>
+<% end %>
+
+<h2><%= @player.name %></h2>
+
+<% @tables_to_display.each do |table| %>
+  <table class="single-game">
+    <caption><%= link_to "Game #{table.game.number}", season_game_path(@season, table.game) %></caption>
+    <% table.seats_in_order_of_place.each_with_index do |seat, index| %>      
+      <tr class="<%= cycle("odd", "even")%>">
+        <% if index == 0 %>
+          <td id="top-left">
+        <% elsif index == 7 %>
+          <td id="bottom-left">
+        <% else %>
+          <td>
+        <% end %>
+          <p <%= "class=emphasize" if seat.player_id == @player.id %>>
+          <%= seat.place.ordinalize if seat.place %>
+        </td>
+        <% if index == 0 %>
+          <td id="top-right">
+        <% elsif index == 7 %>
+          <td id="bottom-right">
+        <% else %>
+          <td>
+        <% end %>
+          <%= link_to seat.player.name, season_player_path(@season, seat.player) %>
+          <% if seat.sub_id != nil %>
+            (<%= @name_lookup[seat.sub_id] %>)
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>  
+<% end %>
+
+

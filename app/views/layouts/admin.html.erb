@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PkrBk</title>
+  <%= stylesheet_link_tag    "application" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<div id="container">
+  <div id="banner">
+    <% if current_user %>
+      Logged in as <%= current_user.username %>.
+      <%= link_to "Log out", logout_path %>
+    <% end %>
+  </div>
+  <div id="navigation">
+    <div id="left-navigation"><%= yield :navigation %></div>
+    <div id="right-navigation">
+      <%= link_to "Players", players_path %>
+      <%= link_to "Seasons", seasons_path %>
+    </div>    
+  </div> 
+  <div id="content"><%= yield %></div>
+</div>
+
+</body>
+</html>

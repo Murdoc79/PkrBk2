@@ -1,0 +1,15 @@
+<h1>Seasons</h2>
+
+<ul>
+  <% @seasons.each do |season| %>
+    <% if season.visible == true || current_user %>
+      <li><%= link_to season.name, season %></li>
+    <% end %>
+  <% end %>
+</ul>
+
+<br />
+
+<% if current_user %>
+  <%= link_to 'New Season', new_season_path %>
+<% end %>
